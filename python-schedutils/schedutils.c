@@ -18,7 +18,7 @@ static PyObject *get_affinity(PyObject *self __unused, PyObject *args)
 	CPU_ZERO(&cpus);
 
 	if (sched_getaffinity(pid, sizeof(cpus), &cpus) < 0) {
-		PyErr_SetString(PyExc_OSError, strerror(errno));
+		PyErr_SetFromErrno(PyExc_SystemError);
 		return NULL;
 	}
 
@@ -30,6 +30,37 @@ static PyObject *get_affinity(PyObject *self __unused, PyObject *args)
 	return list;
 }
 
+static PyObject *set_affinity(PyObject *self __unused, PyObject *args)
+{
+	int pid, nr_elements, i;
+	cpu_set_t cpus;
+	PyObject *list;
+
+	if (!PyArg_ParseTuple(args, "iO", &pid, &list))
+		return NULL;
+
+	CPU_ZERO(&cpus);
+
+	nr_elements = PyList_Size(list);
+	for (i = 0; i < nr_elements; ++i) {
+		int cpu = PyInt_AsLong(PyList_GetItem(list, i));
+
+		if (cpu >= CPU_SETSIZE) {
+			PyErr_SetString(PyExc_SystemError, "Invalid CPU");
+			return NULL;
+		}
+		CPU_SET(cpu, &cpus);
+	}
+
+	if (sched_setaffinity(pid, sizeof(cpus), &cpus) < 0) {
+		PyErr_SetFromErrno(PyExc_SystemError);
+		return NULL;
+	}
+
+	Py_INCREF(Py_None);
+	return Py_None;
+}
+
 static PyObject *get_scheduler(PyObject *self __unused, PyObject *args)
 {
 	int pid, scheduler;
@@ -39,11 +70,31 @@ static PyObject *get_scheduler(PyObject *self __unused, PyObject *args)
 
 	scheduler = sched_getscheduler(pid);
 	if (scheduler < 0) {
-		PyErr_SetString(PyExc_OSError, strerror(errno));
+		PyErr_SetFromErrno(PyExc_SystemError);
 		return NULL;
 	}
 
 	return Py_BuildValue("i", scheduler);
+}
+
+static PyObject *set_scheduler(PyObject *self __unused, PyObject *args)
+{
+	int pid, policy, priority;
+	struct sched_param param;
+
+	if (!PyArg_ParseTuple(args, "iii", &pid, &policy, &priority))
+		return NULL;
+
+	memset(&param, 0, sizeof(param));
+	param.sched_priority = priority;
+
+	if (sched_setscheduler(pid, policy, &param) < 0) {
+		PyErr_SetFromErrno(PyExc_SystemError);
+		return NULL;
+	}
+
+	Py_INCREF(Py_None);
+	return Py_None;
 }
 
 static PyObject *schedstr(PyObject *self __unused, PyObject *args)
@@ -65,10 +116,39 @@ static PyObject *schedstr(PyObject *self __unused, PyObject *args)
 	return PyString_FromString(s);
 }
 
+static PyObject *schedfromstr(PyObject *self __unused, PyObject *args)
+{
+	int scheduler;
+	char *s;
+
+	if (!PyArg_ParseTuple(args, "s", &s))
+		return NULL;
+
+	if (strcmp(s, "SCHED_OTHER") == 0)
+		scheduler = SCHED_OTHER;
+	else if (strcmp(s, "SCHED_RR") == 0)
+		scheduler = SCHED_RR;
+	else if (strcmp(s, "SCHED_FIFO") == 0)
+		scheduler = SCHED_FIFO;
+	else if (strcmp(s, "SCHED_BATCH") == 0)
+		scheduler = SCHED_BATCH;
+	else {
+		PyErr_SetString(PyExc_SystemError, "Unknown scheduler");
+		return NULL;
+	}
+
+	return Py_BuildValue("i", scheduler);
+}
+
 static struct PyMethodDef PySchedutilsModuleMethods[] = {
 	{
 		.ml_name = "get_affinity",
 		.ml_meth = (PyCFunction)get_affinity,
+		.ml_flags = METH_VARARGS,
+	},
+	{
+		.ml_name = "set_affinity",
+		.ml_meth = (PyCFunction)set_affinity,
 		.ml_flags = METH_VARARGS,
 	},
 	{
@@ -77,8 +157,18 @@ static struct PyMethodDef PySchedutilsModuleMethods[] = {
 		.ml_flags = METH_VARARGS,
 	},
 	{
+		.ml_name = "set_scheduler",
+		.ml_meth = (PyCFunction)set_scheduler,
+		.ml_flags = METH_VARARGS,
+	},
+	{
 		.ml_name = "schedstr",
 		.ml_meth = (PyCFunction)schedstr,
+		.ml_flags = METH_VARARGS,
+	},
+	{
+		.ml_name = "schedfromstr",
+		.ml_meth = (PyCFunction)schedfromstr,
 		.ml_flags = METH_VARARGS,
 	},
 	{	.ml_name = NULL, },
