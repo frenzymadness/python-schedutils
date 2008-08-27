@@ -197,6 +197,13 @@ static struct PyMethodDef PySchedutilsModuleMethods[] = {
 
 PyMODINIT_FUNC initschedutils(void)
 {
-	Py_InitModule("schedutils", PySchedutilsModuleMethods);
+	PyObject *m = Py_InitModule("schedutils", PySchedutilsModuleMethods);
+	if (m == NULL)
+		return;
+
+	PyModule_AddIntConstant(m, "SCHED_OTHER", SCHED_OTHER);
+	PyModule_AddIntConstant(m, "SCHED_FIFO", SCHED_FIFO);
+	PyModule_AddIntConstant(m, "SCHED_RR", SCHED_RR);
+	PyModule_AddIntConstant(m, "SCHED_BATCH", SCHED_BATCH);
 }
 
