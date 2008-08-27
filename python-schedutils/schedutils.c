@@ -97,6 +97,22 @@ static PyObject *set_scheduler(PyObject *self __unused, PyObject *args)
 	return Py_None;
 }
 
+static PyObject *get_priority(PyObject *self __unused, PyObject *args)
+{
+	int pid;
+	struct sched_param param = { .sched_priority = -1, };
+
+	if (!PyArg_ParseTuple(args, "i", &pid))
+		return NULL;
+
+	if (sched_getparam(pid, &param) != 0) {
+		PyErr_SetFromErrno(PyExc_SystemError);
+		return NULL;
+	}
+
+	return Py_BuildValue("i", param.sched_priority);
+}
+
 static PyObject *schedstr(PyObject *self __unused, PyObject *args)
 {
 	int scheduler;
@@ -159,6 +175,11 @@ static struct PyMethodDef PySchedutilsModuleMethods[] = {
 	{
 		.ml_name = "set_scheduler",
 		.ml_meth = (PyCFunction)set_scheduler,
+		.ml_flags = METH_VARARGS,
+	},
+	{
+		.ml_name = "get_priority",
+		.ml_meth = (PyCFunction)get_priority,
 		.ml_flags = METH_VARARGS,
 	},
 	{
