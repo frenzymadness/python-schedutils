@@ -156,6 +156,38 @@ static PyObject *schedfromstr(PyObject *self __unused, PyObject *args)
 	return Py_BuildValue("i", scheduler);
 }
 
+static PyObject *get_priority_min(PyObject *self __unused, PyObject *args)
+{
+	int policy, min;
+
+	if (!PyArg_ParseTuple(args, "i", &policy))
+		return NULL;
+
+	min = sched_get_priority_min(policy);
+	if (min < 0) {
+		PyErr_SetFromErrno(PyExc_SystemError);
+		return NULL;
+	}
+
+	return Py_BuildValue("i", min);
+}
+
+static PyObject *get_priority_max(PyObject *self __unused, PyObject *args)
+{
+	int policy, max;
+
+	if (!PyArg_ParseTuple(args, "i", &policy))
+		return NULL;
+
+	max = sched_get_priority_max(policy);
+	if (max < 0) {
+		PyErr_SetFromErrno(PyExc_SystemError);
+		return NULL;
+	}
+
+	return Py_BuildValue("i", max);
+}
+
 static struct PyMethodDef PySchedutilsModuleMethods[] = {
 	{
 		.ml_name = "get_affinity",
@@ -190,6 +222,16 @@ static struct PyMethodDef PySchedutilsModuleMethods[] = {
 	{
 		.ml_name = "schedfromstr",
 		.ml_meth = (PyCFunction)schedfromstr,
+		.ml_flags = METH_VARARGS,
+	},
+	{
+		.ml_name = "get_priority_min",
+		.ml_meth = (PyCFunction)get_priority_min,
+		.ml_flags = METH_VARARGS,
+	},
+	{
+		.ml_name = "get_priority_max",
+		.ml_meth = (PyCFunction)get_priority_max,
 		.ml_flags = METH_VARARGS,
 	},
 	{	.ml_name = NULL, },
