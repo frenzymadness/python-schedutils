@@ -4,7 +4,7 @@
 Summary: Linux scheduler python bindings
 Name: python-schedutils
 Version: 0.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2
 URL: http://git.kernel.org/?p=linux/kernel/git/acme/python-schedutils.git
 Source: http://userweb.kernel.org/~acme/python-schedutils/%{name}-%{version}.tar.bz2
@@ -20,17 +20,17 @@ functions and friends.
 %setup -q
 
 %build
-make
+%{__python} setup.py build
 
 %install
-rm -rf $RPM_BUILD_ROOT
-make DESTDIR=${RPM_BUILD_ROOT} install
+rm -rf %{buildroot}
+%{__python} setup.py install --skip-build --root %{buildroot}
 mkdir -p %{buildroot}%{_bindir}
-cp -f pchrt.py %{buildroot}%{_bindir}/pchrt
-cp -f ptaskset.py %{buildroot}%{_bindir}/ptaskset
+cp -p pchrt.py %{buildroot}%{_bindir}/pchrt
+cp -p ptaskset.py %{buildroot}%{_bindir}/ptaskset
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
@@ -43,6 +43,10 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Thu Aug 28 2008 Arnaldo Carvalho de Melo <acme@redhat.com> - 0.2-2
+- Fix build and install sections as suggested by the fedora rewiewer
+  (BZ #460387)
+
 * Wed Aug 27 2008 Arnaldo Carvalho de Melo <acme@redhat.com> - 0.2-1
 - Add get_priority_{min,max} methods
 - Add constants for SCHED_{BATCH,FIFO,OTHER,RR}
