@@ -113,6 +113,13 @@ static PyObject *get_priority(PyObject *self __unused, PyObject *args)
 	return Py_BuildValue("i", param.sched_priority);
 }
 
+#ifndef SCHED_BATCH
+#define SCHED_BATCH             3
+#endif
+#ifndef SCHED_IDLE
+#define SCHED_IDLE              5
+#endif
+
 static PyObject *schedstr(PyObject *self __unused, PyObject *args)
 {
 	int scheduler;
@@ -126,6 +133,7 @@ static PyObject *schedstr(PyObject *self __unused, PyObject *args)
 	case SCHED_RR:	  s = "SCHED_RR";    break;
 	case SCHED_FIFO:  s = "SCHED_FIFO";  break;
 	case SCHED_BATCH: s = "SCHED_BATCH"; break;
+	case SCHED_IDLE:  s = "SCHED_IDLE";  break;
 	default:	  s = "UNKNOWN";     break;
 	}
 
