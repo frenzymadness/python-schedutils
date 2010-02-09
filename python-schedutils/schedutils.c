@@ -18,7 +18,7 @@ static PyObject *get_affinity(PyObject *self __unused, PyObject *args)
 	CPU_ZERO(&cpus);
 
 	if (sched_getaffinity(pid, sizeof(cpus), &cpus) < 0) {
-		PyErr_SetFromErrno(PyExc_SystemError);
+		PyErr_SetFromErrno(PyExc_OSError);
 		return NULL;
 	}
 
@@ -46,14 +46,14 @@ static PyObject *set_affinity(PyObject *self __unused, PyObject *args)
 		int cpu = PyInt_AsLong(PyList_GetItem(list, i));
 
 		if (cpu >= CPU_SETSIZE) {
-			PyErr_SetString(PyExc_SystemError, "Invalid CPU");
+			PyErr_SetString(PyExc_OSError, "Invalid CPU");
 			return NULL;
 		}
 		CPU_SET(cpu, &cpus);
 	}
 
 	if (sched_setaffinity(pid, sizeof(cpus), &cpus) < 0) {
-		PyErr_SetFromErrno(PyExc_SystemError);
+		PyErr_SetFromErrno(PyExc_OSError);
 		return NULL;
 	}
 
@@ -70,7 +70,7 @@ static PyObject *get_scheduler(PyObject *self __unused, PyObject *args)
 
 	scheduler = sched_getscheduler(pid);
 	if (scheduler < 0) {
-		PyErr_SetFromErrno(PyExc_SystemError);
+		PyErr_SetFromErrno(PyExc_OSError);
 		return NULL;
 	}
 
@@ -89,7 +89,7 @@ static PyObject *set_scheduler(PyObject *self __unused, PyObject *args)
 	param.sched_priority = priority;
 
 	if (sched_setscheduler(pid, policy, &param) < 0) {
-		PyErr_SetFromErrno(PyExc_SystemError);
+		PyErr_SetFromErrno(PyExc_OSError);
 		return NULL;
 	}
 
@@ -106,7 +106,7 @@ static PyObject *get_priority(PyObject *self __unused, PyObject *args)
 		return NULL;
 
 	if (sched_getparam(pid, &param) != 0) {
-		PyErr_SetFromErrno(PyExc_SystemError);
+		PyErr_SetFromErrno(PyExc_OSError);
 		return NULL;
 	}
 
@@ -157,7 +157,7 @@ static PyObject *schedfromstr(PyObject *self __unused, PyObject *args)
 	else if (strcmp(s, "SCHED_BATCH") == 0)
 		scheduler = SCHED_BATCH;
 	else {
-		PyErr_SetString(PyExc_SystemError, "Unknown scheduler");
+		PyErr_SetString(PyExc_OSError, "Unknown scheduler");
 		return NULL;
 	}
 
@@ -173,7 +173,7 @@ static PyObject *get_priority_min(PyObject *self __unused, PyObject *args)
 
 	min = sched_get_priority_min(policy);
 	if (min < 0) {
-		PyErr_SetFromErrno(PyExc_SystemError);
+		PyErr_SetFromErrno(PyExc_OSError);
 		return NULL;
 	}
 
@@ -189,7 +189,7 @@ static PyObject *get_priority_max(PyObject *self __unused, PyObject *args)
 
 	max = sched_get_priority_max(policy);
 	if (max < 0) {
-		PyErr_SetFromErrno(PyExc_SystemError);
+		PyErr_SetFromErrno(PyExc_OSError);
 		return NULL;
 	}
 
