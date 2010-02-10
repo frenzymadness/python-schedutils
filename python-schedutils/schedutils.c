@@ -6,6 +6,10 @@
 #define __unused __attribute__ ((unused))
 #endif
 
+#ifndef SCHED_RESET_ON_FORK
+#define SCHED_RESET_ON_FORK 0x40000000
+#endif
+
 static PyObject *get_affinity(PyObject *self __unused, PyObject *args)
 {
 	PyObject *list;
@@ -128,7 +132,7 @@ static PyObject *schedstr(PyObject *self __unused, PyObject *args)
 	if (!PyArg_ParseTuple(args, "i", &scheduler))
 		return NULL;
 
-	switch (scheduler) {
+	switch (scheduler & ~SCHED_RESET_ON_FORK) {
 	case SCHED_OTHER: s = "SCHED_OTHER"; break;
 	case SCHED_RR:	  s = "SCHED_RR";    break;
 	case SCHED_FIFO:  s = "SCHED_FIFO";  break;
@@ -256,5 +260,6 @@ PyMODINIT_FUNC initschedutils(void)
 	PyModule_AddIntConstant(m, "SCHED_RR", SCHED_RR);
 	PyModule_AddIntConstant(m, "SCHED_BATCH", SCHED_BATCH);
 	PyModule_AddIntConstant(m, "SCHED_IDLE", SCHED_IDLE);
+	PyModule_AddIntConstant(m, "SCHED_RESET_ON_FORK", SCHED_RESET_ON_FORK);
 }
 
