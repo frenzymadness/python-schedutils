@@ -255,5 +255,6 @@ PyMODINIT_FUNC initschedutils(void)
 	PyModule_AddIntConstant(m, "SCHED_FIFO", SCHED_FIFO);
 	PyModule_AddIntConstant(m, "SCHED_RR", SCHED_RR);
 	PyModule_AddIntConstant(m, "SCHED_BATCH", SCHED_BATCH);
+	PyModule_AddIntConstant(m, "SCHED_IDLE", SCHED_IDLE);
 }
 

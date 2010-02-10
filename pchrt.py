@@ -22,6 +22,7 @@ usage: chrt [options] [prio] [pid | cmd [args...]]
 manipulate real-time attributes of a process
   -b, --batch                        set policy to SCHED_BATCH
   -f, --fifo                         set policy to SCHED_FIFO
+  -i, --idle                         set policy to SCHED_IDLE
   -p, --pid                          operate on existing given pid
   -m, --max                          show min and max valid priorities
   -o, --other                        set policy to SCHED_OTHER
@@ -80,6 +81,8 @@ def main():
 			policy = schedutils.SCHED_BATCH
 		elif o in ("-f", "--fifo"):
 			policy = schedutils.SCHED_FIFO
+		elif o in ("-i", "--idle"):
+			policy = schedutils.SCHED_IDLE
 		elif o in ("-m", "--max"):
 			show_all_priority_limits()
 			return
