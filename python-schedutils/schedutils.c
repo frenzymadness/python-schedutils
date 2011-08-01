@@ -182,11 +182,13 @@ static PyObject *set_affinity(PyObject *self __unused, PyObject *args)
 		CPU_SET_S(cpu, cpusetsize, cpus);
 	}
 
-	if (sched_setaffinity(pid, sizeof(cpus), cpus) < 0) {
+	i = sched_setaffinity(pid, sizeof(cpus), cpus);
+	CPU_FREE(cpus);
+
+	if (i < 0) {
 		PyErr_SetFromErrno(PyExc_OSError);
 		return NULL;
 	}
-	CPU_FREE(cpus);
 out:
 	Py_INCREF(Py_None);
 	return Py_None;
