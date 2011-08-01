@@ -135,7 +135,7 @@ static PyObject *get_affinity(PyObject *self __unused, PyObject *args)
 		goto out_free;
 
 	list = PyList_New(0);
-	for (cpu = 0; cpu < CPU_SETSIZE; ++cpu)
+	for (cpu = 0; cpu < max_cpus; ++cpu)
 		if (CPU_ISSET_S(cpu, cpusetsize, cpus))
 			PyList_Append(list, Py_BuildValue("i", cpu));
 
