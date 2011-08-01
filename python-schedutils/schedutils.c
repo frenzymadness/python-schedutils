@@ -126,7 +126,7 @@ static PyObject *get_affinity(PyObject *self __unused, PyObject *args)
 
 	cpus = CPU_ALLOC(max_cpus);
 	if (cpus == NULL)
-		goto out_error;
+		return PyErr_NoMemory();
 
 	cpusetsize = CPU_ALLOC_SIZE(max_cpus);
 	CPU_ZERO_S(cpusetsize, cpus);
@@ -165,7 +165,7 @@ static PyObject *set_affinity(PyObject *self __unused, PyObject *args)
 
 	cpus = CPU_ALLOC(max_cpus);
 	if (cpus == NULL)
-		goto out_error;
+		return PyErr_NoMemory();
 
 	cpusetsize = CPU_ALLOC_SIZE(max_cpus);
 	CPU_ZERO_S(cpusetsize, cpus);
