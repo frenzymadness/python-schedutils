@@ -176,7 +176,8 @@ static PyObject *set_affinity(PyObject *self __unused, PyObject *args)
 
 		if (cpu >= max_cpus) {
 			PyErr_SetString(PyExc_OSError, "Invalid CPU");
-			goto out_free;
+			CPU_FREE(cpus);
+			return NULL;
 		}
 		CPU_SET_S(cpu, cpusetsize, cpus);
 	}
@@ -189,8 +190,6 @@ static PyObject *set_affinity(PyObject *self __unused, PyObject *args)
 out:
 	Py_INCREF(Py_None);
 	return Py_None;
-out_free:
-	CPU_FREE(cpus);
 out_error:
 	PyErr_SetFromErrno(PyExc_OSError);
 	goto out;
