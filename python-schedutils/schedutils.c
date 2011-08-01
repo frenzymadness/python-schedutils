@@ -101,10 +101,8 @@ static PyObject *get_max_number_of_cpus(PyObject *self __unused, PyObject *args 
 {
 	int ret = __get_max_number_of_cpus();
 
-	if (ret < 0) {
-		PyErr_SetFromErrno(PyExc_OSError);
-		return NULL;
-	}
+	if (ret < 0)
+		return PyErr_SetFromErrno(PyExc_OSError);
 
 	return Py_BuildValue("i", ret);
 }
@@ -140,13 +138,12 @@ static PyObject *get_affinity(PyObject *self __unused, PyObject *args)
 			PyList_Append(list, Py_BuildValue("i", cpu));
 
 	CPU_FREE(cpus);
-out:
+
 	return list;
 out_free:
 	CPU_FREE(cpus);
 out_error:
-	PyErr_SetFromErrno(PyExc_OSError);
-	goto out;
+	return PyErr_SetFromErrno(PyExc_OSError);
 }
 
 static PyObject *set_affinity(PyObject *self __unused, PyObject *args)
@@ -185,16 +182,13 @@ static PyObject *set_affinity(PyObject *self __unused, PyObject *args)
 	i = sched_setaffinity(pid, sizeof(cpus), cpus);
 	CPU_FREE(cpus);
 
-	if (i < 0) {
-		PyErr_SetFromErrno(PyExc_OSError);
-		return NULL;
-	}
-out:
+	if (i < 0)
+		return PyErr_SetFromErrno(PyExc_OSError);
+
 	Py_INCREF(Py_None);
 	return Py_None;
 out_error:
-	PyErr_SetFromErrno(PyExc_OSError);
-	goto out;
+	return PyErr_SetFromErrno(PyExc_OSError);
 }
 
 static PyObject *get_scheduler(PyObject *self __unused, PyObject *args)
@@ -205,10 +199,8 @@ static PyObject *get_scheduler(PyObject *self __unused, PyObject *args)
 		return NULL;
 
 	scheduler = sched_getscheduler(pid);
-	if (scheduler < 0) {
-		PyErr_SetFromErrno(PyExc_OSError);
-		return NULL;
-	}
+	if (scheduler < 0)
+		return PyErr_SetFromErrno(PyExc_OSError);
 
 	return Py_BuildValue("i", scheduler);
 }
@@ -224,10 +216,8 @@ static PyObject *set_scheduler(PyObject *self __unused, PyObject *args)
 	memset(&param, 0, sizeof(param));
 	param.sched_priority = priority;
 
-	if (sched_setscheduler(pid, policy, &param) < 0) {
-		PyErr_SetFromErrno(PyExc_OSError);
-		return NULL;
-	}
+	if (sched_setscheduler(pid, policy, &param) < 0)
+		return PyErr_SetFromErrno(PyExc_OSError);
 
 	Py_INCREF(Py_None);
 	return Py_None;
@@ -241,10 +231,8 @@ static PyObject *get_priority(PyObject *self __unused, PyObject *args)
 	if (!PyArg_ParseTuple(args, "i", &pid))
 		return NULL;
 
-	if (sched_getparam(pid, &param) != 0) {
-		PyErr_SetFromErrno(PyExc_OSError);
-		return NULL;
-	}
+	if (sched_getparam(pid, &param) != 0)
+		return PyErr_SetFromErrno(PyExc_OSError);
 
 	return Py_BuildValue("i", param.sched_priority);
 }
@@ -308,10 +296,8 @@ static PyObject *get_priority_min(PyObject *self __unused, PyObject *args)
 		return NULL;
 
 	min = sched_get_priority_min(policy);
-	if (min < 0) {
-		PyErr_SetFromErrno(PyExc_OSError);
-		return NULL;
-	}
+	if (min < 0)
+		return PyErr_SetFromErrno(PyExc_OSError);
 
 	return Py_BuildValue("i", min);
 }
@@ -324,10 +310,8 @@ static PyObject *get_priority_max(PyObject *self __unused, PyObject *args)
 		return NULL;
 
 	max = sched_get_priority_max(policy);
-	if (max < 0) {
-		PyErr_SetFromErrno(PyExc_OSError);
-		return NULL;
-	}
+	if (max < 0)
+		return PyErr_SetFromErrno(PyExc_OSError);
 
 	return Py_BuildValue("i", max);
 }
