@@ -7,6 +7,58 @@
 #define __unused __attribute__ ((unused))
 #endif
 
+#ifndef CPU_ALLOC
+
+/* From glibc-headers-2.12-1.7.el6.x86_64 */
+
+/* Basic access functions.  */
+#define __CPUELT(cpu)  ((cpu) / __NCPUBITS)
+#define __CPUMASK(cpu) ((__cpu_mask) 1 << ((cpu) % __NCPUBITS))
+
+#define CPU_ALLOC_SIZE(ncpus) \
+	((((ncpus) + __NCPUBITS - 1) / __NCPUBITS) * sizeof (__cpu_mask))
+
+/* Access functions for CPU masks.  */
+# if __GNUC_PREREQ (2, 91)
+#  define __CPU_ZERO_S(setsize, cpusetp) \
+  do __builtin_memset (cpusetp, '\0', setsize); while (0)
+# else
+#  define __CPU_ZERO_S(setsize, cpusetp) \
+  do {                                                                        \
+    size_t __i;                                                               \
+    size_t __imax = (setsize) / sizeof (__cpu_mask);                          \
+    __cpu_mask *__bits = (cpusetp)->__bits;                                   \
+    for (__i = 0; __i < __imax; ++__i)                                        \
+      __bits[__i] = 0;                                                        \
+  } while (0)
+# endif
+
+#define CPU_FREE(cpus)  free(cpus)
+#define CPU_ALLOC(ncpus) malloc(CPU_ALLOC_SIZE(ncpus))
+
+# define __CPU_SET_S(cpu, setsize, cpusetp) \
+  (__extension__                                                              \
+   ({ size_t __cpu = (cpu);                                                   \
+      __cpu < 8 * (setsize)                                                   \
+      ? (((__cpu_mask *) ((cpusetp)->__bits))[__CPUELT (__cpu)]               \
+         |= __CPUMASK (__cpu))                                                \
+      : 0; }))
+
+# define __CPU_ISSET_S(cpu, setsize, cpusetp) \
+  (__extension__                                                              \
+   ({ size_t __cpu = (cpu);                                                   \
+      __cpu < 8 * (setsize)                                                   \
+      ? ((((__const __cpu_mask *) ((cpusetp)->__bits))[__CPUELT (__cpu)]      \
+          & __CPUMASK (__cpu))) != 0                                          \
+      : 0; }))
+
+#define CPU_SET_S(cpu, setsize, cpusetp) __CPU_SET_S (cpu, setsize, cpusetp)
+#define CPU_ISSET_S(cpu, setsize, cpusetp) __CPU_ISSET_S (cpu, setsize, cpusetp)
+#define CPU_ZERO_S(setsize, cpusetp) __CPU_ZERO_S (setsize, cpusetp)
+
+#endif /* CPU_ALLOC */
+
+
 #ifndef SCHED_RESET_ON_FORK
 #define SCHED_RESET_ON_FORK 0x40000000
 #endif
