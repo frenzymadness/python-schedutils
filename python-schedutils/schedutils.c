@@ -280,6 +280,8 @@ static PyObject *schedfromstr(PyObject *self __unused, PyObject *args)
 		scheduler = SCHED_FIFO;
 	else if (strcmp(s, "SCHED_BATCH") == 0)
 		scheduler = SCHED_BATCH;
+	else if (strcmp(s, "SCHED_IDLE") == 0)
+		scheduler = SCHED_IDLE;
 	else {
 		PyErr_SetString(PyExc_OSError, "Unknown scheduler");
 		return NULL;
