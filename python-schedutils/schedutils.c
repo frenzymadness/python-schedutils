@@ -179,7 +179,7 @@ static PyObject *set_affinity(PyObject *self __unused, PyObject *args)
 		CPU_SET_S(cpu, cpusetsize, cpus);
 	}
 
-	i = sched_setaffinity(pid, sizeof(cpus), cpus);
+	i = sched_setaffinity(pid, cpusetsize, cpus);
 	CPU_FREE(cpus);
 
 	if (i < 0)
