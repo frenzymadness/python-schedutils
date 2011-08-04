@@ -1,0 +1,20 @@
+v0.4:
+
+[acme@mica python-schedutils]$ git log v0.2.. --format=oneline --abbrev-commit
+1568357 Fix cpusetsize parameter in sched_setaffinity call
+28a2f17 Support SCHED_IDLE in schedfromstr
+ac29a2e Use PyErr_SetFromErrno return value
+f09bae5 Fix leak on setaffinity error path
+76269f0 Don't set the error string twice
+80ce42f Don't limit looking for CPUs at 1024
+028a3af Use PyErr_NoMemory when CPU_ALLOC fails
+36e377d CPU_ALLOC macros are not present in older systems
+6b9f411 sched_setaffinity expects a cpu_set_t pointer, not a ptr to a pointer
+741697a Dinamically size the cpu_set_t objects
+4f3b33c Support SCHED_RESET_ON_FORK policy flag
+66a2327 Add SCHED_IDLE to the list of constants exported
+4e05f75 Methods should raise OSError exceptions
+d3aead2 schedutils: Older kernels don't have SCHED_BATCH defined
+c162a1e Merge branch 'master' of ssh://master.kernel.org/pub/scm/linux/kernel/git/acme/python-schedutils
+fb72c8e Makefile: fixup version gathering
+10f78ff rpm: Fixed %build and %install sections, part of fedora review

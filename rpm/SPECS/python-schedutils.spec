@@ -3,8 +3,8 @@
 
 Summary: Linux scheduler python bindings
 Name: python-schedutils
-Version: 0.2
-Release: 2%{?dist}
+Version: 0.4
+Release: 1%{?dist}
 License: GPLv2
 URL: http://git.kernel.org/?p=linux/kernel/git/acme/python-schedutils.git
 Source: http://userweb.kernel.org/~acme/python-schedutils/%{name}-%{version}.tar.bz2
@@ -43,6 +43,12 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Mon Aug  1 2011 Arnaldo Carvalho de Melo <acme@redhat.com> - 0.4-1
+- New upstream release.
+
+* Tue May 17 2011 Clark Williams <williams@redhat.com> - 0.3-1
+- reworked get_affinity() and set_affinity() to use dynamic CPU_* macros
+
 * Thu Aug 28 2008 Arnaldo Carvalho de Melo <acme@redhat.com> - 0.2-2
 - Fix build and install sections as suggested by the fedora rewiewer
   (BZ #460387)

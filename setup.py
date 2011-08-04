@@ -7,7 +7,7 @@ schedutils = Extension('schedutils',
 
 # don't reformat this line, Makefile parses it
 setup(name='schedutils',
-      version='0.1',
+      version='0.4',
       description='Python module to interface with the Linux scheduler',
       author='Arnaldo Carvalho de Melo',
       author_email='acme@redhat.com',
