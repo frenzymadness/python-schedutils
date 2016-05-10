@@ -4,7 +4,7 @@
 Summary: Linux scheduler python bindings
 Name: python-schedutils
 Version: 0.4
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2
 URL: http://git.kernel.org/?p=linux/kernel/git/acme/python-schedutils.git
 Source: http://userweb.kernel.org/~acme/python-schedutils/%{name}-%{version}.tar.bz2
@@ -28,6 +28,9 @@ rm -rf %{buildroot}
 mkdir -p %{buildroot}%{_bindir}
 cp -p pchrt.py %{buildroot}%{_bindir}/pchrt
 cp -p ptaskset.py %{buildroot}%{_bindir}/ptaskset
+mkdir -p %{buildroot}%{_mandir}/man1
+gzip -c pchrt.1 > %{buildroot}%{_mandir}/man1/pchrt.1.gz
+gzip -c ptaskset.1 > %{buildroot}%{_mandir}/man1/ptaskset.1.gz
 
 %clean
 rm -rf %{buildroot}
@@ -41,8 +44,14 @@ rm -rf %{buildroot}
 %if "%{python_ver}" >= "2.5"
 %{python_sitearch}/*.egg-info
 %endif
+%{_mandir}/man1/pchrt.1.gz
+%{_mandir}/man1/ptaskset.1.gz
 
 %changelog
+* Tue May 10 2016 John Kacur <jkacur@redhat.com> - 0.4-2
+- Add man pages for pchrt and ptaskset
+- Fix and update usage messages for pchrt and ptaskset
+
 * Mon Aug  1 2011 Arnaldo Carvalho de Melo <acme@redhat.com> - 0.4-1
 - New upstream release.
 
@@ -63,8 +72,8 @@ rm -rf %{buildroot}
 * Tue Jun 10 2008 Arnaldo Carvalho de Melo <acme@redhat.com> - 0.1-3
 - add dist to the release tag
 
-* Tue Dec 19 2007 Arnaldo Carvalho de Melo <acme@redhat.com> - 0.1-2
+* Wed Dec 19 2007 Arnaldo Carvalho de Melo <acme@redhat.com> - 0.1-2
 - First build into rhel5-rt
 
-* Tue Dec 19 2007 Arnaldo Carvalho de Melo <acme@redhat.com> - 0.1-1
+* Wed Dec 19 2007 Arnaldo Carvalho de Melo <acme@redhat.com> - 0.1-1
 - Initial package
