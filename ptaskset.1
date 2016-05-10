@@ -1,0 +1,26 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.TH PTASKSET 1 "May 10 2016"
+.SH NAME
+.B ptaskset (python\-schedutils) \- set or get the affinity of a process
+.SH SYNOPSIS
+ptaskset [options] [mask | cpu\-list] [pid | cmd [args...]]
+.SH OPTIONS
+.TP
+.B \-p, \-\-pid
+operate on existing given pid
+.TP
+.B \-c, \-\-cpu\-list
+display and specify cpus in list format
+.TP
+.B \-h, \-\-help
+display help
+.SH SEE ALSO
+.BR taskset (1)
+.SH AUTHOR
+ptaskset was written by Arnaldo Carvalho de Melo <acme@redhat.com>
+.br
+as part of python\-schedutils
+.PP
+This manual page was written by John Kacur <jkacur@redhat.com>
+.PP
+Report bugs and send patches to <tuna-devel@lists.fedorahosted.org>

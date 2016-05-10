@@ -1,0 +1,47 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.TH PCHRT 1 "May 10 2016"
+.SH NAME
+.B pchrt (python\-schedutils) \- manipulate the real-time attributes of a process
+.SH SYNOPSIS
+pchrt [options] [prio] [pid | cmd [args...]]
+.SH OPTIONS
+.TP
+.B  \-b, \-\-batch
+set policy to SCHED_BATCH
+.TP
+.B  \-f, \-\-fifo
+set policy to SCHED_FIFO
+.TP
+.B  \-i, \-\-idle
+set policy to SCHED_IDLE
+.TP
+.B  \-p, \-\-pid
+operate on existing given pid
+.TP
+.B  \-m, \-\-max
+show min and max valid priorities
+.TP
+.B  \-o, \-\-other
+set policy to SCHED_OTHER
+.TP
+.B  \-r, \-\-rr
+set policy to SCHED_RR (default)
+.TP
+.B  \-R, \-\-reset-on-fork
+set SCHED_RESET_ON_FORK for FIFO or RR
+.TP
+.B  \-h, \-\-help
+display help
+.TP
+.B Note:
+You must give a priority if changing policy.
+.SH SEE ALSO
+.BR chrt (1)
+.SH AUTHOR
+pchrt was written by Arnaldo Carvalho de Melo <acme@redhat.com>
+.br
+as part of python\-schedutils
+.PP
+This manual page was written by John Kacur <jkacur@redhat.com>
+.PP
+Report bugs and send patches to <tuna-devel@lists.fedorahosted.org>
