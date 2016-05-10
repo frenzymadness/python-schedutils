@@ -18,7 +18,7 @@ import os, schedutils, sys
 
 def usage():
 	print '''ptaskset (python-schedutils)
-usage: taskset [options] [mask | cpu-list] [pid | cmd [args...]]
+usage: ptaskset [options] [mask | cpu-list] [pid | cmd [args...]]
 set or get the affinity of a process
 
   -p, --pid                  operate on existing given pid

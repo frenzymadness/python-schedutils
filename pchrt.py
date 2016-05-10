@@ -18,7 +18,7 @@ import os, schedutils, sys
 
 def usage():
 	print '''pchrt (python-schedutils)
-usage: chrt [options] [prio] [pid | cmd [args...]]
+usage: pchrt [options] [prio] [pid | cmd [args...]]
 manipulate real-time attributes of a process
   -b, --batch                        set policy to SCHED_BATCH
   -f, --fifo                         set policy to SCHED_FIFO
@@ -32,7 +32,7 @@ manipulate real-time attributes of a process
 
 You must give a priority if changing policy.
 
-Report bugs and send patches to <acme@ghostprotocols.net>'''
+Report bugs and send patches to <tuna-devel@lists.fedorahosted.org>'''
 	return
 
 def show_priority_limits(policy):
