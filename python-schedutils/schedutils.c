@@ -243,6 +243,10 @@ static PyObject *get_priority(PyObject *self __unused, PyObject *args)
 #ifndef SCHED_IDLE
 #define SCHED_IDLE              5
 #endif
+#ifndef SCHED_DEADLINE
+#define SCHED_DEADLINE          6
+#endif
+
 
 static PyObject *schedstr(PyObject *self __unused, PyObject *args)
 {
@@ -258,6 +262,7 @@ static PyObject *schedstr(PyObject *self __unused, PyObject *args)
 	case SCHED_FIFO:  s = "SCHED_FIFO";  break;
 	case SCHED_BATCH: s = "SCHED_BATCH"; break;
 	case SCHED_IDLE:  s = "SCHED_IDLE";  break;
+        case SCHED_DEADLINE:  s = "SCHED_DEADLINE";  break;
 	default:	  s = "UNKNOWN";     break;
 	}
 
@@ -282,6 +287,8 @@ static PyObject *schedfromstr(PyObject *self __unused, PyObject *args)
 		scheduler = SCHED_BATCH;
 	else if (strcmp(s, "SCHED_IDLE") == 0)
 		scheduler = SCHED_IDLE;
+        else if (strcmp(s, "SCHED_DEADLINE") == 0)
+                scheduler = SCHED_DEADLINE;
 	else {
 		PyErr_SetString(PyExc_OSError, "Unknown scheduler");
 		return NULL;
@@ -382,6 +389,7 @@ PyMODINIT_FUNC initschedutils(void)
 	PyModule_AddIntConstant(m, "SCHED_RR", SCHED_RR);
 	PyModule_AddIntConstant(m, "SCHED_BATCH", SCHED_BATCH);
 	PyModule_AddIntConstant(m, "SCHED_IDLE", SCHED_IDLE);
+        PyModule_AddIntConstant(m, "SCHED_DEADLINE", SCHED_DEADLINE);
 	PyModule_AddIntConstant(m, "SCHED_RESET_ON_FORK", SCHED_RESET_ON_FORK);
 }
 
