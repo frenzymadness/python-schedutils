@@ -3,11 +3,12 @@
 
 Summary: Linux scheduler python bindings
 Name: python-schedutils
-Version: 0.4
-Release: 2%{?dist}
+Version: 0.5
+Release: 1%{?dist}
 License: GPLv2
-URL: http://git.kernel.org/?p=linux/kernel/git/acme/python-schedutils.git
-Source: http://userweb.kernel.org/~acme/python-schedutils/%{name}-%{version}.tar.bz2
+URL: https://rt.wiki.kernel.org/index.php/Tuna
+Source: https://cdn.kernel.org/pub/software/libs/python/%{name}/%{name}-%{version}.tar.xz
+http://userweb.kernel.org/~acme/python-schedutils/%{name}-%{version}.tar.bz2
 Group: System Environment/Libraries
 BuildRequires: python-devel
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
@@ -37,7 +38,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
-%doc COPYING
+%doc COPYING README
 %{_bindir}/pchrt
 %{_bindir}/ptaskset
 %{python_sitearch}/schedutils.so
@@ -48,6 +49,10 @@ rm -rf %{buildroot}
 %{_mandir}/man1/ptaskset.1.gz
 
 %changelog
+* Thu Dec 22 2016 Jiri Kastner <jkastner@redhat.com> - 0.5-1
+- added basic support for SCHED_DEADLINE
+- fixed URL and Source in specfile
+
 * Tue May 10 2016 John Kacur <jkacur@redhat.com> - 0.4-2
 - Add man pages for pchrt and ptaskset
 - Fix and update usage messages for pchrt and ptaskset
