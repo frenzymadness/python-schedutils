@@ -3,12 +3,11 @@
 
 Summary: Linux scheduler python bindings
 Name: python-schedutils
-Version: 0.5
+Version: 0.5.1
 Release: 1%{?dist}
 License: GPLv2
 URL: https://rt.wiki.kernel.org/index.php/Tuna
 Source: https://cdn.kernel.org/pub/software/libs/python/%{name}/%{name}-%{version}.tar.xz
-http://userweb.kernel.org/~acme/python-schedutils/%{name}-%{version}.tar.bz2
 Group: System Environment/Libraries
 BuildRequires: python-devel
 BuildRoot:  %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
