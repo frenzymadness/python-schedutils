@@ -14,19 +14,20 @@
 #   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 #   General Public License for more details.
 
+from __future__ import print_function
 import os
 import schedutils
 import sys
 
 
 def usage():
-    print '''ptaskset (python-schedutils)
+    print('''ptaskset (python-schedutils)
 usage: ptaskset [options] [mask | cpu-list] [pid | cmd [args...]]
 set or get the affinity of a process
 
   -p, --pid                  operate on existing given pid
   -c, --cpu-list             display and specify cpus in list format
-  -h, --help                 display this help'''
+  -h, --help                 display this help''')
 
     return
 
@@ -103,7 +104,7 @@ def cpustring_to_list(cpustr):
         if len(ends) > 2:
             raise "Syntax error"
         if len(ends) == 2:
-            cpu_list += range(int(ends[0]), int(ends[1]) + 1)
+            cpu_list += list(range(int(ends[0]), int(ends[1]) + 1))
         else:
             cpu_list += [int(ends[0])]
     return list(set(cpu_list))
@@ -115,7 +116,7 @@ def show_settings(pid, when, cpu_list_mode):
         mask = ",".join([str(a) for a in affinity])
     else:
         mask = ",".join(["%x" % a for a in hexbitmask(affinity)])
-    print "pid %d's %s affinity mask: %s" % (pid, when, mask)
+    print("pid %d's %s affinity mask: %s" % (pid, when, mask))
 
 
 def change_settings(pid, affinity, cpu_list_mode):
@@ -129,9 +130,9 @@ def change_settings(pid, affinity, cpu_list_mode):
 
     try:
         schedutils.set_affinity(pid, affinity)
-    except SystemError, err:
-        print "sched_setaffinity: %s" % err[1]
-        print "failed to set pid %d's affinity" % pid
+    except SystemError as err:
+        print("sched_setaffinity: %s" % err[1])
+        print("failed to set pid %d's affinity" % pid)
 
 
 def main():
