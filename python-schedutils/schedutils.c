@@ -220,8 +220,7 @@ static PyObject *set_scheduler(PyObject *self __unused, PyObject *args)
 	if (sched_setscheduler(pid, policy, &param) < 0)
 		return PyErr_SetFromErrno(PyExc_OSError);
 
-	Py_INCREF(Py_None);
-	return Py_None;
+	Py_RETURN_NONE;
 }
 
 static PyObject *get_priority(PyObject *self __unused, PyObject *args)
