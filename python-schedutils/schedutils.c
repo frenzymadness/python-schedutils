@@ -374,6 +374,7 @@ static struct PyMethodDef PySchedutilsModuleMethods[] = {
 	{
 		.ml_name = "get_max_number_of_cpus",
 		.ml_meth = (PyCFunction)get_max_number_of_cpus,
+		.ml_flags = METH_NOARGS,
 	},
 	{	.ml_name = NULL, },
 };
