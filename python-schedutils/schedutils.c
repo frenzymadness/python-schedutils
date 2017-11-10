@@ -1,4 +1,5 @@
 #include <Python.h>
+#include "py3compat.h"
 #include <sched.h>
 #include <errno.h>
 #include <syscall.h>
@@ -266,7 +267,7 @@ static PyObject *schedstr(PyObject *self __unused, PyObject *args)
 	default:	  s = "UNKNOWN";     break;
 	}
 
-	return PyString_FromString(s);
+	return PyStr_FromString(s);
 }
 
 static PyObject *schedfromstr(PyObject *self __unused, PyObject *args)
@@ -378,11 +379,19 @@ static struct PyMethodDef PySchedutilsModuleMethods[] = {
 	{	.ml_name = NULL, },
 };
 
-PyMODINIT_FUNC initschedutils(void)
+static struct PyModuleDef moduledef = {
+    PyModuleDef_HEAD_INIT,
+    .m_name = "schedutils",
+    .m_doc = NULL,
+    .m_size = -1,
+    .m_methods = PySchedutilsModuleMethods,
+};
+
+MODULE_INIT_FUNC(schedutils)
 {
-	PyObject *m = Py_InitModule("schedutils", PySchedutilsModuleMethods);
+	PyObject *m = PyModule_Create(&moduledef);
 	if (m == NULL)
-		return;
+		return NULL;
 
 	PyModule_AddIntConstant(m, "SCHED_OTHER", SCHED_OTHER);
 	PyModule_AddIntConstant(m, "SCHED_FIFO", SCHED_FIFO);
@@ -391,5 +400,7 @@ PyMODINIT_FUNC initschedutils(void)
 	PyModule_AddIntConstant(m, "SCHED_IDLE", SCHED_IDLE);
         PyModule_AddIntConstant(m, "SCHED_DEADLINE", SCHED_DEADLINE);
 	PyModule_AddIntConstant(m, "SCHED_RESET_ON_FORK", SCHED_RESET_ON_FORK);
+
+	return m;
 }
 
